@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Водный баланс</title>
+    <title>Water Balance Calculator</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap');
         
@@ -258,93 +258,93 @@
     
     <div class="container">
         <header>
-            <h1>💧 Водный баланс 💧</h1>
-            <p class="subtitle">Рассчитайте вашу индивидуальную потребность в воде на основе ваших данных и активности</p>
+            <h1>💧 Water Balance 💧</h1>
+            <p class="subtitle">Calculate your individual water needs based on your data and activity level</p>
         </header>
         
         <div class="content">
             <div class="water-info">
-                <h2>О воде и гидратации</h2>
-                <p>Вода - это источник жизни. Она составляет около 60% нашего тела и играет ключевую роль в работе всех органов и систем.</p>
-                <p>Поддержание водного баланса важно для:</p>
+                <h2>About Water and Hydration</h2>
+                <p>Water is the source of life. It makes up about 60% of our body and plays a key role in the functioning of all organs and systems.</p>
+                <p>Maintaining water balance is important for:</p>
                 <ul style="margin-left: 20px; margin-bottom: 15px;">
-                    <li>Регуляции температуры тела</li>
-                    <li>Питания клеток и тканей</li>
-                    <li>Выведения токсинов</li>
-                    <li>Поддержания здоровья кожи</li>
-                    <li>Повышения энергии и концентрации</li>
+                    <li>Regulating body temperature</li>
+                    <li>Nourishing cells and tissues</li>
+                    <li>Removing toxins</li>
+                    <li>Maintaining skin health</li>
+                    <li>Increasing energy and concentration</li>
                 </ul>
-                <p>Наша формула расчета учитывает ваш вес, физическую активность и погодные условия для определения оптимального количества воды.</p>
+                <p>Our calculation formula takes into account your weight, physical activity and weather conditions to determine the optimal amount of water.</p>
             </div>
             
             <div class="form-section">
                 <div class="form-group">
-                    <label for="name">Ваше имя</label>
-                    <input type="text" id="name" placeholder="Введите ваше имя">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" placeholder="Enter your name">
                 </div>
                 
                 <div class="form-group">
-                    <label for="weight">Ваш вес (кг)</label>
-                    <input type="number" id="weight" placeholder="Введите ваш вес">
+                    <label for="weight">Your Weight (kg)</label>
+                    <input type="number" id="weight" placeholder="Enter your weight">
                 </div>
                 
                 <div class="dropdown" id="sport-dropdown">
                     <div class="dropdown-header">
-                        <span>Каким видом спорта вы занимаетесь?</span>
+                        <span>What sport do you practice?</span>
                         <span class="dropdown-icon">▼</span>
                     </div>
                     <div class="dropdown-content">
                         <select id="sport">
-                            <option value="0">Не занимаюсь спортом</option>
-                            <option value="200">Легкие тренировки (200 ккал)</option>
-                            <option value="400">Средние тренировки (400 ккал)</option>
-                            <option value="600">Интенсивные тренировки (600 ккал)</option>
-                            <option value="800">Профессиональный спорт (800 ккал)</option>
+                            <option value="0">No sports</option>
+                            <option value="200">Light workouts (200 kcal)</option>
+                            <option value="400">Medium workouts (400 kcal)</option>
+                            <option value="600">Intense workouts (600 kcal)</option>
+                            <option value="800">Professional sports (800 kcal)</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="dropdown" id="weather-dropdown">
                     <div class="dropdown-header">
-                        <span>Какая у вас погода?</span>
+                        <span>What is your weather like?</span>
                         <span class="dropdown-icon">▼</span>
                     </div>
                     <div class="dropdown-content">
                         <select id="weather">
-                            <option value="0.3">Холодно (0.3)</option>
-                            <option value="0.35">Прохладно (0.35)</option>
-                            <option value="0.4">Умеренно (0.4)</option>
-                            <option value="0.45">Тепло (0.45)</option>
-                            <option value="0.5">Жарко (0.5)</option>
+                            <option value="0.3">Cold (0.3)</option>
+                            <option value="0.35">Cool (0.35)</option>
+                            <option value="0.4">Moderate (0.4)</option>
+                            <option value="0.45">Warm (0.45)</option>
+                            <option value="0.5">Hot (0.5)</option>
                         </select>
                     </div>
                 </div>
                 
-                <button class="calculate-btn" id="calculate">Рассчитать водный баланс</button>
+                <button class="calculate-btn" id="calculate">Calculate Water Balance</button>
                 
                 <div class="result" id="result">
-                    <h3>Ваша рекомендуемая норма воды:</h3>
+                    <h3>Your Recommended Water Intake:</h3>
                     <div class="water-drop">💧</div>
                     <div class="result-value" id="result-value">0</div>
-                    <p>литров в день</p>
+                    <p>liters per day</p>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>© 2023 Водный баланс. Пейте достаточно воды для здоровья и благополучия!</p>
+            <p>© 2025 Water Balance. Drink enough water for health and well-being!</p>
         </footer>
     </div>
 
     <script>
-        // Работа с выпадающими списками
+        // Dropdown functionality
         document.querySelectorAll('.dropdown-header').forEach(header => {
             header.addEventListener('click', function() {
                 this.parentElement.classList.toggle('active');
             });
         });
 
-        // Закрытие выпадающих списков при клике вне их
+        // Close dropdowns when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.dropdown')) {
                 document.querySelectorAll('.dropdown').forEach(dropdown => {
@@ -353,7 +353,7 @@
             }
         });
 
-        // Расчет водного баланса
+        // Water balance calculation
         document.getElementById('calculate').addEventListener('click', function() {
             const name = document.getElementById('name').value.trim();
             const weight = parseFloat(document.getElementById('weight').value);
@@ -361,18 +361,17 @@
             const weatherFactor = parseFloat(document.getElementById('weather').value);
             
             if (!weight || weight <= 0) {
-                alert('Пожалуйста, введите корректный вес');
+                alert('Please enter a valid weight');
                 return;
             }
             
-            // Расчет по формуле: вес * 0.03 + калории * 0.001 + фактор погоды
+            // Calculation formula: weight * 0.03 + calories * 0.001 + weather factor
             const result = (weight * 0.03) + (sportCalories * 0.001) + weatherFactor;
             
-            // Отображение результата
+            // Display result
             document.getElementById('result-value').textContent = result.toFixed(2);
-            document.getElementById('result').style.display = 'block';
             
-            // Анимация появления результата
+            // Animate result appearance
             const resultElement = document.getElementById('result');
             resultElement.style.opacity = '0';
             resultElement.style.transform = 'translateY(20px)';
@@ -384,7 +383,7 @@
                 resultElement.style.transform = 'translateY(0)';
             }, 10);
             
-            // Плавная прокрутка к результату
+            // Smooth scroll to result
             resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     </script>
