@@ -488,12 +488,11 @@
             The calculated water intake is ${waterAmount.toFixed(2)} liters per day. 
             
             Please provide:
-            1. A brief explanation of why this amount is recommended
-            2. Practical tips for achieving this daily water intake
+            1. Personal tips for client
+            2. Why is it needable?
             3. Signs of proper hydration to watch for
-            4. Any additional considerations based on the provided data
             
-            Keep the response concise, practical, and encouraging. Use a friendly, professional tone.`;
+            Keep the response concise, practical, and encouraging. Use a friendly, professional tone,say maximal shortly,between every Paragraph create new line.`;
             
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
