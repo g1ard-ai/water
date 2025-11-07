@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Balance Calculator</title>
+    <title>Water Balance Calculator with AI</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap');
         
@@ -230,6 +230,46 @@
             margin: 10px 0;
         }
         
+        .ai-recommendation {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 191, 255, 0.1);
+            border-radius: 8px;
+            text-align: left;
+            display: none;
+        }
+        
+        .ai-recommendation h4 {
+            color: #00bfff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .ai-recommendation p {
+            line-height: 1.6;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #00bfff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         footer {
             margin-top: 40px;
             text-align: center;
@@ -275,6 +315,7 @@
                     <li>Increasing energy and concentration</li>
                 </ul>
                 <p>Our calculation formula takes into account your weight, physical activity and weather conditions to determine the optimal amount of water.</p>
+                <p style="margin-top: 20px; color: #00bfff; font-weight: 500;">Now with AI-powered personalized recommendations!</p>
             </div>
             
             <div class="form-section">
@@ -320,13 +361,29 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label for="api-key">Your OpenAI API Key</label>
+                    <input type="password" id="api-key" placeholder="Enter your OpenAI API key">
+                    <small style="color: rgba(255,255,255,0.7); font-size: 0.8em;">Your API key is used only for this session and is not stored</small>
+                </div>
+                
                 <button class="calculate-btn" id="calculate">Calculate Water Balance</button>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Getting AI recommendations...</p>
+                </div>
                 
                 <div class="result" id="result">
                     <h3>Your Recommended Water Intake:</h3>
                     <div class="water-drop">💧</div>
                     <div class="result-value" id="result-value">0</div>
                     <p>liters per day</p>
+                    
+                    <div class="ai-recommendation" id="ai-recommendation">
+                        <h4>AI Hydration Tips:</h4>
+                        <p id="ai-text">Loading recommendations...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,23 +410,46 @@
             }
         });
 
-        // Water balance calculation
-        document.getElementById('calculate').addEventListener('click', function() {
+        // Water balance calculation and AI recommendations
+        document.getElementById('calculate').addEventListener('click', async function() {
             const name = document.getElementById('name').value.trim();
             const weight = parseFloat(document.getElementById('weight').value);
             const sportCalories = parseFloat(document.getElementById('sport').value);
             const weatherFactor = parseFloat(document.getElementById('weather').value);
+            const apiKey = document.getElementById('api-key').value.trim();
             
             if (!weight || weight <= 0) {
                 alert('Please enter a valid weight');
                 return;
             }
             
+            if (!apiKey) {
+                alert('Please enter your OpenAI API key');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            
             // Calculation formula: weight * 0.03 + calories * 0.001 + weather factor
             const result = (weight * 0.03) + (sportCalories * 0.001) + weatherFactor;
             
             // Display result
             document.getElementById('result-value').textContent = result.toFixed(2);
+            
+            // Get AI recommendations
+            try {
+                const aiText = await getAIRecommendations(name, weight, sportCalories, weatherFactor, result, apiKey);
+                document.getElementById('ai-text').textContent = aiText;
+                document.getElementById('ai-recommendation').style.display = 'block';
+            } catch (error) {
+                console.error('Error getting AI recommendations:', error);
+                document.getElementById('ai-text').textContent = "Unable to load AI recommendations. Please check your API key and try again.";
+                document.getElementById('ai-recommendation').style.display = 'block';
+            }
+            
+            // Hide loading
+            document.getElementById('loading').style.display = 'none';
             
             // Animate result appearance
             const resultElement = document.getElementById('result');
@@ -386,6 +466,65 @@
             // Smooth scroll to result
             resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
+
+        // Function to get AI recommendations
+        async function getAIRecommendations(name, weight, sportCalories, weatherFactor, waterAmount, apiKey) {
+            // Determine activity level based on sport calories
+            let activityLevel = "sedentary";
+            if (sportCalories >= 600) activityLevel = "very active";
+            else if (sportCalories >= 400) activityLevel = "active";
+            else if (sportCalories >= 200) activityLevel = "lightly active";
+            
+            // Determine weather condition
+            let weatherCondition = "moderate";
+            if (weatherFactor >= 0.5) weatherCondition = "hot";
+            else if (weatherFactor >= 0.45) weatherCondition = "warm";
+            else if (weatherFactor >= 0.4) weatherCondition = "moderate";
+            else if (weatherFactor >= 0.35) weatherCondition = "cool";
+            else weatherCondition = "cold";
+            
+            const prompt = `As a hydration expert, provide personalized water intake recommendations for ${name || "a person"} who weighs ${weight} kg, has ${activityLevel} activity level, and lives in ${weatherCondition} weather conditions. 
+            
+            The calculated water intake is ${waterAmount.toFixed(2)} liters per day. 
+            
+            Please provide:
+            1. A brief explanation of why this amount is recommended
+            2. Practical tips for achieving this daily water intake
+            3. Signs of proper hydration to watch for
+            4. Any additional considerations based on the provided data
+            
+            Keep the response concise, practical, and encouraging. Use a friendly, professional tone.`;
+            
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a helpful hydration and wellness expert. Provide practical, evidence-based advice about water intake and hydration, say it shortly and only correct information'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: 500,
+                    temperature: 0.7
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+            
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
     </script>
 </body>
 </html>
